@@ -29,8 +29,13 @@ def index(request):
     #Note the first parameter is the template we wish to use.
     return render_to_response('rango/index.html', context_dict, context)
 
+def about(request):
+    context = RequestContext(request)
+    context_dict = {'mensaje':'ola ke ase!!!'}
+    return render_to_response('rango/about.html', context_dict, context)
+
 def indexSencillo(request):
     return HttpResponse("Rango dice: 'Hola Mundo!' <a href='/rango/about'>About</a>")
 
-def about(request):
+def aboutSencillo(request):
     return HttpResponse(" Rango dice: 'Esta es la pagina de acerca de nosotros' <a href='/rango/' class="">Index</a>")
