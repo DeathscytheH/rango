@@ -15,6 +15,71 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Category, Page
+from rango.forms import CategoryForm, PageForm
+
+def add_page(request, category_name_url):
+    context = RequestContext(request)
+
+    category_name = decodeUrl(category_name_url)
+
+    if request.method == 'POST':
+        form = PageForm(request.POST)
+
+        if form.is_valid():
+            #No podemos hacer commit inmediatamente
+            #No todos los campos se populan automaticamente.
+            page=form.save(commit=False)
+
+            #Obtenemos el objeto categoria asociado para agregarlo
+            #Usamos un try. Checamos que la categoria exista.
+            try:
+                cat=Category.objects.get(name=category_name)
+                page.category = cat
+            except Category.DoesNotExist:
+                #La categoria no existe.
+                #Renderizamos la forma de agregar categorias por mientras.
+                return render_to_response('rango/add_category.html', {}, context)
+
+            #Creamos un valor default para el numero de vistas
+            page.views = 0
+
+            #Salvamos la instancia del nuevo modelo
+            page.save()
+
+            #Ya la pagina salvada mostramos la categoria
+            return category(request, category_name_url)
+        else:
+            print form.errors
+    else:
+        form = PageForm()
+
+    return render_to_response('rango/add_page.html',{'category_name_url':category_name_url, 'category_name': category_name, 'form':form}, context)
+
+def add_category(request):
+    context = RequestContext(request)
+
+    #A HTTP POST
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+
+        #Es una forma valida?
+        if form.is_valid():
+            #Guardamos los datos
+            form.save(commit=True)
+
+            #Le hablamos a la vista index()
+            #Regresamos al usuario al home
+            return index(request)
+        else:
+            #La forma tiene errores, los mostramos
+            print form.errors
+    else:
+        #Si no es un post, mostrar la forma para ingresar datos.
+        form=CategoryForm()
+
+    #Una forma erronea o vacia
+    #Se renderiza la forma con los mensajes de error, si hay.
+    return render_to_response('rango/add_category.html', {'form': form}, context)
 
 def category(request, category_name_url):
     context = RequestContext(request)
@@ -23,7 +88,7 @@ def category(request, category_name_url):
     category_name = decodeUrl(category_name_url)
 
     #Diccionario con el nombre de la categoria
-    context_dict = {'category_name': category_name}
+    context_dict = {'category_name': category_name, 'category_name_url': category_name_url}
 
     try:
         #Existe la categoria que buscamos?

@@ -48,3 +48,13 @@
     + Pasa los resultados del modelo al contexto del template.
     + Prepara el template para mostrar los datos.
     + Mapea la URL a la vista.
+
+##### Chapter 7
+
+- Crear una forma y dejar que los usuarios ingresen datos.
+    + Crea un archivo ```forms.py``` dentro del folder de tu app. Ahi se guardaran las clases relacionadas a las formas.
+    + Crea una clase ```ModelForm``` por cada modelo que desees representar como una forma.
+    + Customizar las formas al gusto.
+    + Crear o actualizar una vista para manejar la forma, _incluyendo mostrar la forma, guardando los datos de la forma y mostrando errores que puedan ocurrir cuando el usuario meta datos erroneos o vacios en la forma_.
+    + Crear o actualizar un template para mostrar la forma.
+    + Agregar un ```urlpattern``` para mapear la nueva vista, si se creo una nueva.
