@@ -11,6 +11,7 @@
     <h1>Rango dice...</h1>
     <!-- 
     Hola Mundo! <strong> {{boldmessage}}</strong><br>-->
+    <h3>Top 5 de Categorias</h3>
     {% if categories %}
         <ul>
             {% for category in categories %}
@@ -20,6 +21,18 @@
     {% else %}
         <strong>No hay categorias aqui!!!</strong>
     {% endif %}
+
+    <h3>Top 5 de Paginas</h3>
+    {% if pages %}
+        <ul>
+            {% for page in pages %}
+            <li><a href="{{ page.url }}">{{ page.title }}</a></li>    
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>No hay paginas</strong>
+    {% endif %}
+
     <a href="/rango/about">About</a>
     <img src="{% static 'rango.jpg' %}" alt="Foto de rango">
 </body>

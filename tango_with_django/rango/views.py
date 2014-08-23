@@ -20,7 +20,7 @@ def category(request, category_name_url):
     context = RequestContext(request)
 
     #Cambiamos espacios en blanco por '_'
-    category_name = category_name_url.replace('_',' ')
+    category_name = decodeUrl(category_name_url)
 
     #Diccionario con el nombre de la categoria
     context_dict = {'category_name': category_name}
@@ -52,17 +52,24 @@ def index(request):
     #Ordenan por el numero de likes de mayor a menor
     #Solo el top 5 o todas si son menores a 5
     category_list = Category.objects.order_by('-likes')[:5]
+    page_list = Page.objects.order_by('-views')[:5]
 
     #Se guarda en el diccionario
-    context_dict = {'categories': category_list}
+    context_dict = {'categories': category_list, 'pages': page_list}
 
     #Ciclamos por cada categoria y creamos un atributo URL
     #Este atributo guarda la URL codificada
     for category in category_list:
-        category.url = category.name.replace(' ', '_')
+        category.url = encodeUrl(category.name)
 
     #Lo renderisamos
     return render_to_response('rango/index.html', context_dict, context)
+
+def encodeUrl(str):
+    return str.replace(' ', '_')
+
+def decodeUrl(str):
+    return str.replace('_', ' ')
 
 def about(request):
     context = RequestContext(request)
