@@ -39,3 +39,12 @@
     + Sincroniza o resincroniza la DB con el comando ```python manage.py syncdb```. Esto creara la infraestructura necesaria dentro de la DB para tu nuevo modelo.
     + Crea/edita y ejecuta un scrip de populado para tu(s) nuevo(s) modelo(s).
     + Recuerda las limitantes de ```syncdb``` para eso utilizaremos ```south```
+
+##### Chapter 6
+
+- Crear una pagina basada en data
+    + Importar los modelos en el archivo ```views.py```.
+    + Dentro de la vista que vas a usar, hacerle querys al modelo para obtener los datos a presentar.
+    + Pasa los resultados del modelo al contexto del template.
+    + Prepara el template para mostrar los datos.
+    + Mapea la URL a la vista.
