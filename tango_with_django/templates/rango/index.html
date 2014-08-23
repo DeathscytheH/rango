@@ -9,7 +9,17 @@
 </head>
 <body>
     <h1>Rango dice...</h1>
-    Hola Mundo! <strong> {{boldmessage}}</strong><br>
+    <!-- 
+    Hola Mundo! <strong> {{boldmessage}}</strong><br>-->
+    {% if categories %}
+        <ul>
+            {% for category in categories %}
+            <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>No hay categorias aqui!!!</strong>
+    {% endif %}
     <a href="/rango/about">About</a>
     <img src="{% static 'rango.jpg' %}" alt="Foto de rango">
 </body>

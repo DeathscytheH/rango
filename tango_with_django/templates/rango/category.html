@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Category</title>
+</head>
+<body>
+    <h1>{{ category_name }}</h1>
+    {% if category %}
+        {% if pages %}
+            <ul>
+                {% for page in pages %}
+                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>No hay paginas en esta categoria.</strong>
+        {% endif %}
+    {% else %}
+        La categoria {{ category_name }} no existe.
+    {% endif %}
+</body>
+</html>
