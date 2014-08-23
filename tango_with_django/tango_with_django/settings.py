@@ -7,6 +7,7 @@ PROYECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
 PROYECT_PATH = os.path.abspath(PROYECT_PATH)
 TEMPLATE_PATH = os.path.join(PROYECT_PATH, 'templates')
 STATIC_PATH = os.path.join(PROYECT_PATH, 'static')
+DATABASE_PATH = os.path.join(PROYECT_PATH, 'rango.db')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -19,8 +20,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': DATABASE_PATH,                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -134,9 +135,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rango',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
