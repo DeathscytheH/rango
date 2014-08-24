@@ -1,16 +1,15 @@
-<!DOCTYPE html>
+{% extends "rango/base.html" %}
 
 {% load static %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>About</title>
-</head>
-<body>
+{% block title %}
+    Acerca de
+{% endblock title %}
+
+{% block body_block %}
     <h1>Rango dice...</h1>
     Esta es la pagina de acerca de nosotros <strong> {{mensaje}}</strong><br>
-    <a href="/rango">Index</a>
-    <img src="{% static 'hola.jpg' %}" alt="Hola">
-</body>
-</html>
+    <img src="{% static 'hola.jpg' %}" alt="Hola"> <br>
+
+    El numero de veces que nos has visitado: {{ visits }}
+{% endblock body_block %}

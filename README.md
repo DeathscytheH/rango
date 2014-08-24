@@ -73,3 +73,18 @@
 - Restringir el acceso
     + Utilizar un decorador para restringir el acceso a ciertas partes.
 - Loguear fuera al usuario
+
+##### Chapter 9
+
+- Herencia en los templates
+    + Identificar las partes recuerrentes de las paginas de tu app
+    + En un template base, estara el esqueleto de la estructura y definiremos un numero de bloques que estan sujetos a cambios dependiendo de cual pagina este viendo el usuario.
+    + Crear templates especificos.
+- Recuerda cargar ```{% load static %}``` en cada template hijo que lo vayas a utilizar, no solo el base. No se hereda. 
+
+##### Chapter 10
+
+- Consideraciones al utilizar cookies en Django.
+    + Considera que tipo de cookies quieres utilizar para tu aplicacion web. La info que quieres guarda necesita ser persistente? O se puede tirar en cuanto se cierre el navegador?
+    + Pensar detenidamente que informacion guardaremos. Recordando que el guardar info en cookies guardas info en la computadora del cliente. Esto es un riesgo de seguridad, ya que se desconoce si el usuario tiene su maquina comprometida.
+    + Recordando que el usuario tambien puede tener la seguridad de su navegador a niveles altos y puede que bloquee tus cookies. Si esto pasa puede que tu app no funcione correctamente. Se tiene que tomar en cuenta eso.

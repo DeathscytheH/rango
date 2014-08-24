@@ -1,29 +1,8 @@
-<!DOCTYPE html>
+{% extends "rango/base.html" %}
 
 {% load static %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Rango</title>
-</head>
-<body>
-    {% if user.is_authenticated %}
-        <h1>Rango dice... Hola {{ user.username }}!</h1>
-
-        <a href="/rango/restricted/">Pagina Restringida</a><br>
-        <a href="/rango/logout/">Logout</a><br>        
-    {% else %}
-        <h1>Rango dice... Hola Mundo</h1>
-
-        <a href="/rango/register/">Registrate</a><br>
-        <a href="/rango/login">Logueate</a><br>
-
-    {% endif %}
-    <!-- 
-    Hola Mundo! <strong> {{boldmessage}}</strong><br>-->
-    <a href="/rango/add_category">Agrega una nueva Categoria</a><br>
-    <a href="/rango/about">Acerca de</a><br>
+{% block body_block %}
     <h3>Top 5 de Categorias</h3>
     {% if categories %}
         <ul>
@@ -47,5 +26,4 @@
     {% endif %}
 
     <img src="{% static 'rango.jpg' %}" alt="Foto de rango">
-</body>
-</html>
+{% endblock body_block %}

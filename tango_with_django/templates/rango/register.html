@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Rango</title>
-</head>
-<body>
-    <h1>Registrate en Rango</h1>
+{% extends "rango/base.html" %}
+
+{% block title %}
+    Registrate
+{% endblock title %}
+
+{% block body_block %}
+    <h1>Rango dice: Registrate</h1>
 
     {% if registered %}
         Rango dice: <strong>Gracias por registrarte</strong><br>
@@ -23,5 +23,4 @@
             <input type="submit" name='submit' value='Registrate'>
         </form>
     {% endif %}
-</body>
-</html>
+{% endblock body_block %}

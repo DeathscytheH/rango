@@ -18,6 +18,7 @@ from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 #Para desloguearse requiere estar logueado
 @login_required
@@ -30,7 +31,8 @@ def user_logout(request):
 
 @login_required
 def restricted(request):
-    return HttpResponse('Lo puedes ver porque estas logueado.')
+    context = RequestContext(request)
+    return render_to_response('rango/restricted.html', {}, context)
 
 def user_login(request):
     context = RequestContext(request)
@@ -234,6 +236,20 @@ def index(request):
     for category in category_list:
         category.url = encodeUrl(category.name)
 
+    #Iniciamos las cookies del lado del server
+    if request.session.get('last_visit'):
+        #La sesion tiene un valor de last_visit
+        last_visit_time = request.session.get('last_visit')
+        visits = request.session.get('visits', 0)
+
+        if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).days > 0:
+            request.session['visits'] = visits + 1
+            request.session['last_visit'] = str(datetime.now())
+    else:
+        #Si el get regresa None, y la session no tiene un valor para la ultima visita
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = 1
+
     #Lo renderisamos
     return render_to_response('rango/index.html', context_dict, context)
 
@@ -246,6 +262,14 @@ def decodeUrl(str):
 def about(request):
     context = RequestContext(request)
     context_dict = {'mensaje':'ola ke ase!!!'}
+
+    #Agregamos un contador de visitas utilizando cookies.
+    if request.session.get('visits'):
+        count = request.session.get('visits')
+    else:
+        count = 0
+    context_dict['visits'] = count
+    
     return render_to_response('rango/about.html', context_dict, context)
 
 """

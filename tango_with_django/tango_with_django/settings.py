@@ -145,6 +145,9 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 #URL del Login
 LOGIN_URL = '/rango/login/'
 
+#Tiempo de existencia de las cookies
+SESSION_COOKIE_AGE = 604800
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
