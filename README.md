@@ -88,3 +88,8 @@
     + Considera que tipo de cookies quieres utilizar para tu aplicacion web. La info que quieres guarda necesita ser persistente? O se puede tirar en cuanto se cierre el navegador?
     + Pensar detenidamente que informacion guardaremos. Recordando que el guardar info en cookies guardas info en la computadora del cliente. Esto es un riesgo de seguridad, ya que se desconoce si el usuario tiene su maquina comprometida.
     + Recordando que el usuario tambien puede tener la seguridad de su navegador a niveles altos y puede que bloquee tus cookies. Si esto pasa puede que tu app no funcione correctamente. Se tiene que tomar en cuenta eso.
+
+##### Chapter 11
+
+- Agregar bootstrap, jquery y extras al gusto.
+

@@ -54,3 +54,4 @@ docs/_build/
 
 # PyBuilder
 target/
+tango_with_django/rango/keys.py
