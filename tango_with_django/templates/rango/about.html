@@ -7,9 +7,12 @@
 {% endblock title %}
 
 {% block body_block %}
+
+<div class="jumbotron">
+    
     <h1>Rango dice...</h1>
     Esta es la pagina de acerca de nosotros <strong> {{mensaje}}</strong><br>
+    El numero de veces que nos has visitado: {{ visits }} <br>
     <img src="{% static 'hola.jpg' %}" alt="Hola"> <br>
-
-    El numero de veces que nos has visitado: {{ visits }}
+</div>
 {% endblock body_block %}

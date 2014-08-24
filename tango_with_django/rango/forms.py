@@ -45,13 +45,18 @@ class PageForm(forms.ModelForm):
 
 class UserForm(forms.ModelForm):
     #El de default, el renderizado sale mal. Hay que especificarlo
-    password=forms.CharField(widget=forms.PasswordInput())
+    username = forms.CharField(help_text="Por favor ingresa un nombre de usuario.")
+    email = forms.CharField(help_text="Por favor ingresa tu correo electronico.")
+    password = forms.CharField(widget=forms.PasswordInput(), help_text="Por favor ingresa un password.")
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
 
 class UserProfileForm(forms.ModelForm):
+    website = forms.URLField(help_text="Ingresa tu sitio web.", required=False)
+    picture = forms.ImageField(help_text="Selecciona una imagen para tu perfil.", required=False)
+
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')

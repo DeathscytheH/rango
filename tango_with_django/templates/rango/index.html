@@ -3,27 +3,42 @@
 {% load static %}
 
 {% block body_block %}
-    <h3>Top 5 de Categorias</h3>
-    {% if categories %}
+<div class="jumbotron">
+    <h1>Listo para Rango</h1>
+    <p>Encuentra, Agrega, Comparte y Rango ligas y recursos utiles.</p>
+</div>
+
+<div class="row-fluid">
+    <div class="col-md-6 column">
+        <h2>Top 5 - Categorias</h2>
+        {% if categories %}
         <ul>
             {% for category in categories %}
             <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
             {% endfor %}
         </ul>
-    {% else %}
-        <strong>No hay categorias aqui!!!</strong>
-    {% endif %}
+        {% else %}
+        <strong>No hay categorias.</strong>
+        {% endif %}
 
-    <h3>Top 5 de Paginas</h3>
-    {% if pages %}
+    </div>
+    <!--/span-->
+    <div class="col-md-6 column">
+        <h2>Top 5 - Pages</h2>
+        {% if pages %}
         <ul>
             {% for page in pages %}
-            <li><a href="{{ page.url }}">{{ page.title }}</a></li>    
+            <li><a href="{{ page.url}}">{{ page.title }}</a> - {{ page.category }} ({{ page.views }} vista(s))</li>
             {% endfor %}
         </ul>
-    {% else %}
-        <strong>No hay paginas</strong>
-    {% endif %}
+        {% else %}
+        <strong>No hay paginas.</strong>
+        {% endif %}
+
+    </div>
+    <!--/span-->
+</div>
+<!--/row-->
 
     <img src="{% static 'rango.jpg' %}" alt="Foto de rango">
 {% endblock body_block %}

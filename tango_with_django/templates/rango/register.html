@@ -5,22 +5,39 @@
 {% endblock title %}
 
 {% block body_block %}
-    <h1>Rango dice: Registrate</h1>
+<div class="jumbotron">
+    <h1>Registrate con Rango</h1>
+    <br />
 
-    {% if registered %}
-        Rango dice: <strong>Gracias por registrarte</strong><br>
-        <a href="/rango/">Regresa al Inicio</a><br>
-    {% else %}
-        Rango dice: <strong>Registrate aqui!!!</strong><br>
-        <form id='user_form' method='post' action="/rango/register/" enctype='multipart/form-data'>
+    <div class="container">
+        {% if registered %}
+        <p>Gracias por registrarte.</p>
+
+        <p><a href="/rango/login/">Login</a> logueate cuando estes listo para Rango.</p>
+        {% else %}
+        <form class="form-signin col-md-8" id="user_form" method="post" action="/rango/register/"
+              enctype="multipart/form-data">
             {% csrf_token %}
-            {% comment %}
-                Muestra cada forma. El metodo as_p envuelve cada elemento en un parrafo <p>.
-                Esto asegura que cada elemento aparesca en una nueva linea.
-            {% endcomment %}
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
-            <input type="submit" name='submit' value='Registrate'>
+            <h2 class="form-signin-heading">Registrate aqui!</h2>
+            <!-- Display each form here -->
+
+            {% for field in user_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}<br />
+            {{ field }}<br />
+            {% endfor %}
+
+            {% for field in profile_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}<br />
+            {{ field }}<br />
+            {% endfor %}
+
+            <br />
+            <!-- Provide a button to click to submit the form. -->
+            <input class="btn btn-primary" type="submit" name="submit" value="Registrate"/>
         </form>
-    {% endif %}
+        {% endif %}
+    </div>
+</div>
 {% endblock body_block %}
