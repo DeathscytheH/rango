@@ -1,7 +1,8 @@
 #forms.py
 
 from django import forms
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
+from django.contrib.auth.models import User
 
 class CategoryForm(forms.ModelForm):
     """docstring for CategoryForm"""
@@ -41,3 +42,17 @@ class PageForm(forms.ModelForm):
         #Algunos campos del modelo permiten NULL como valor.
         #Con el codigo siguiente no mostramos la llave foranea.
         fields = ('title', 'url', 'views')
+
+class UserForm(forms.ModelForm):
+    #El de default, el renderizado sale mal. Hay que especificarlo
+    password=forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('website', 'picture')
+

@@ -8,11 +8,17 @@
     <title>Rango</title>
 </head>
 <body>
-    <h1>Rango dice...</h1>
+    {% if user.is_authenticated %}
+        <h1>Rango dice... Hola {{ user.username }}!</h1>    
+    {% else %}
+        <h1>Rango dice... Hola Mundo</h1>
+    {% endif %}
     <!-- 
     Hola Mundo! <strong> {{boldmessage}}</strong><br>-->
-    <a href="/rango/about">About</a>
-    <a href="/rango/add_category">Agrega una nueva Categoria</a>
+    <a href="/rango/about">Acerca de</a><br>
+    <a href="/rango/add_category">Agrega una nueva Categoria</a><br>
+    <a href="/rango/register/">Registrate</a><br>
+    <a href="/rango/login">Logueate</a><br>
     <h3>Top 5 de Categorias</h3>
     {% if categories %}
         <ul>

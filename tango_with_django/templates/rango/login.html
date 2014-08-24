@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rango</title>
+</head>
+<body>
+    <h1>Login para Rango</h1>
+
+    <form id='login_form' method='post' action="/rango/login/">
+        {% csrf_token %}
+        {% comment %}
+            El atributo name del input tiene que ser igual al de la vista user_login.
+            Ejemplo:
+                username para el username y password para el password
+            Y no olvidar el token
+        {% endcomment %}
+        Username: <input type="text" name='username' value='' size='50' /><br>
+        
+        Password: <input type="password" name='password' value='' size='50' /><br>
+
+        <input type="submit" value='Login'>
+    </form>
+</body>
+</html>

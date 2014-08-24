@@ -11,11 +11,103 @@
     que deseamos enviar al cliente solicitando la vista.
 
 """
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Category, Page
-from rango.forms import CategoryForm, PageForm
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from django.contrib.auth import authenticate, login
+
+def user_login(request):
+    context = RequestContext(request)
+
+    #Si es un POST jalamos los datos
+    if request.method=='POST':
+        #Juntamos el username y pass que nos da el usuario
+        #Esta info es obtenida de la forma login
+        username = request.POST['username']
+        password = request.POST['password']
+
+        #Utilizamos los metodos de django para saber si las credenciales son validas
+        #Si si lo son, nos regresa un objeto User
+        user = authenticate(username = username, password= password)
+
+        #Si tenemos un objeto User, las credenciales son correctas.
+        #Si obtenemos un None, el usuario no esta registrado.
+        if user:
+            #La cuenta esta activa?
+            if user.is_active:
+                #Si la cuenta es valida y activa, podemos loguear al usuario.
+                #Y mandarlo a home
+                login(request, user)
+                return HttpResponseRedirect('/rango/')
+            else:
+                #Encontramos una cuenta deshabilitada
+                return HttpResponse('Tu cuenta esta deshabilitada')
+        else:
+            #Credenciales no validas
+            print 'Login invalido: {0}, {1}'.format(username, password)
+            return HttpResponse('Login invalido. Revisa tu password y/o usuario')
+    #La peticion no es POST asi que mostramos la forma de login
+    else:
+        #No se van a pasar variables al template, por lo tanto el diccionario va vacio.
+        return render_to_response('rango/login.html', {}, context)
+
+
+def register(request):
+    context = RequestContext(request)
+
+    #Un valor boleano que le dice al template si el registro fue exitoso.
+    #inicialmente falso. Se cambiara mas adelante.
+    registered=False
+
+    #Si es un HTTP POST, procesaremos los datos.
+    if request.method == 'POST':
+        #Intentamos obtener la informacion de la forma
+        #Utilizamos ambas formas UserForm y UserProfileForm
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        #Si las dos formas son validas
+        if user_form.is_valid() and profile_form.is_valid():
+            #Guardamos los datos de la forma en la DB
+            user = user_form.save()
+
+            #Se hashea el pass con el metodo set_password
+            #Una vez hasheado, actualizamos el objeto usuario
+            user.set_password(user.password)
+            user.save()
+
+            #Ahora sobre la instancia de UserProfile
+            #Los atributos del modelo user los tenemos que poner nosotros, ponemos commit = false
+            #Con esto detenemos el guardar en la DB, hasta que estemos seguros de que no hay errores
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            #El usuario eligio una imagen?
+            #Si si lo hizo, hay que obtenerla de la forma y ponerla en el modelo UserProfile
+            if 'picture' in request.FILES:
+                profile.picture=request.FILES['picture']
+
+            #Ahora salvamos la instancia del modelo UserProfile
+            profile.save()
+
+            #Actualizamos la variable para decirle al template que el registro fue exitoso
+            registered=True
+        #Forma o formas invalidas - errores o algo
+        #Imprime en terminal los errores.
+        #Tambien se mostraran al usuario.
+        else:
+            print user_form.errors, profile_form.errors
+    #No es un HTTP POST, asi que las dos instancias de ModelForm se renderizaran.
+    #Estas formas estaran en blanco, listas para el usuario.
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    #Renderizamos el template dependiendo del contexto
+    return render_to_response('rango/register.html', {'user_form':user_form, 'profile_form':profile_form, 'registered':registered}, context)
+
 
 def add_page(request, category_name_url):
     context = RequestContext(request)

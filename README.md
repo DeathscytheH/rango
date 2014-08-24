@@ -58,3 +58,16 @@
     + Crear o actualizar una vista para manejar la forma, _incluyendo mostrar la forma, guardando los datos de la forma y mostrando errores que puedan ocurrir cuando el usuario meta datos erroneos o vacios en la forma_.
     + Crear o actualizar un template para mostrar la forma.
     + Agregar un ```urlpattern``` para mapear la nueva vista, si se creo una nueva.
+
+##### Chapter 8
+
+- Autenticar usuarios
+- El modelo User
+- Agregar campos si se requiere al modelo User
+- Crear una vista y template para registrar usuarios
+- Agregar la funcionalidad de login
+    + Crear un login para manejar las credenciales de los usuarios
+    + Crear un template para el login y mostrar la forma de login
+    + Mapear la vista
+    + Dar un link para loguearse desde el index
+- Restringir el acceso
