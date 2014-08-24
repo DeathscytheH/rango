@@ -16,7 +16,21 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+#Para desloguearse requiere estar logueado
+@login_required
+def user_logout(request):
+    #El usuario esta logueamo, solo lo deslogueamos
+    logout(request)
+
+    #Lo redireccionamos al home
+    return HttpResponseRedirect('/rango/')
+
+@login_required
+def restricted(request):
+    return HttpResponse('Lo puedes ver porque estas logueado.')
 
 def user_login(request):
     context = RequestContext(request)
@@ -108,7 +122,7 @@ def register(request):
     #Renderizamos el template dependiendo del contexto
     return render_to_response('rango/register.html', {'user_form':user_form, 'profile_form':profile_form, 'registered':registered}, context)
 
-
+@login_required
 def add_page(request, category_name_url):
     context = RequestContext(request)
 
@@ -147,6 +161,7 @@ def add_page(request, category_name_url):
 
     return render_to_response('rango/add_page.html',{'category_name_url':category_name_url, 'category_name': category_name, 'form':form}, context)
 
+@login_required
 def add_category(request):
     context = RequestContext(request)
 

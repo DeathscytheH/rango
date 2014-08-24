@@ -71,3 +71,5 @@
     + Mapear la vista
     + Dar un link para loguearse desde el index
 - Restringir el acceso
+    + Utilizar un decorador para restringir el acceso a ciertas partes.
+- Loguear fuera al usuario
