@@ -14,12 +14,49 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from rango.bing_search import run_query
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
+
+def track_url(request):
+    context = RequestContext(request)
+    page_id = None
+    url='/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+    return redirect(url)
+
+@login_required
+def profile(request):
+    context = RequestContext(request)
+
+    cat_list = get_category_list()
+    context_dict = {'cat_list': cat_list}
+
+    u = User.objects.get(username= request.user)
+
+    try:
+        up = UserProfile.objects.get(user=u)
+    except:
+        up = None
+
+    context_dict['user'] = u
+    context_dict['userprofile'] = up
+    
+    return render_to_response('rango/profile.html', context_dict, context)
 
 def search(request):
     context = RequestContext(request)
@@ -49,7 +86,11 @@ def restricted(request):
 
 def user_login(request):
     context = RequestContext(request)
+    context_dict = {}
 
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
+    
     #Si es un POST jalamos los datos
     if request.method=='POST':
         #Juntamos el username y pass que nos da el usuario
@@ -80,11 +121,15 @@ def user_login(request):
     #La peticion no es POST asi que mostramos la forma de login
     else:
         #No se van a pasar variables al template, por lo tanto el diccionario va vacio.
-        return render_to_response('rango/login.html', {}, context)
+        return render_to_response('rango/login.html', context_dict, context)
 
 
 def register(request):
     context = RequestContext(request)
+    context_dict = {}
+
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
 
     #Un valor boleano que le dice al template si el registro fue exitoso.
     #inicialmente falso. Se cambiara mas adelante.
@@ -134,13 +179,16 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
 
+    context_dict['user_form'] = user_form
+    context_dict['profile_form'] = profile_form
+    context_dict['registered'] = registered
     #Renderizamos el template dependiendo del contexto
-    return render_to_response('rango/register.html', {'user_form':user_form, 'profile_form':profile_form, 'registered':registered}, context)
+    return render_to_response('rango/register.html', context_dict, context)
 
 @login_required
 def add_page(request, category_name_url):
     context = RequestContext(request)
-
+    context_dict = {}
     category_name = decodeUrl(category_name_url)
 
     if request.method == 'POST':
@@ -174,12 +222,18 @@ def add_page(request, category_name_url):
     else:
         form = PageForm()
 
-    return render_to_response('rango/add_page.html',{'category_name_url':category_name_url, 'category_name': category_name, 'form':form}, context)
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
+    context_dict['category_name_url'] = category_name_url
+    context_dict['category_name'] = category_name
+    context_dict['form'] = form
+
+    return render_to_response('rango/add_page.html', context_dict, context)
 
 @login_required
 def add_category(request):
     context = RequestContext(request)
-
+    context_dict={}
     #A HTTP POST
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -198,10 +252,25 @@ def add_category(request):
     else:
         #Si no es un post, mostrar la forma para ingresar datos.
         form=CategoryForm()
+        #Pasando cat_list a renderizar
+    
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
+    context_dict['form'] = form
 
     #Una forma erronea o vacia
     #Se renderiza la forma con los mensajes de error, si hay.
-    return render_to_response('rango/add_category.html', {'form': form}, context)
+    return render_to_response('rango/add_category.html', context_dict, context)
+
+#Funcion auxiliar
+
+def get_category_list():
+    cat_list = Category.objects.all()
+
+    for cat in cat_list:
+        cat.url = encodeUrl(cat.name)
+    
+    return cat_list
 
 def category(request, category_name_url):
     context = RequestContext(request)
@@ -212,23 +281,33 @@ def category(request, category_name_url):
     #Diccionario con el nombre de la categoria
     context_dict = {'category_name': category_name, 'category_name_url': category_name_url}
 
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
+
     try:
         #Existe la categoria que buscamos?
         #Si no, el metodo .get() lanza una excepcion DoesNotExist
         #El metodo .get() o regresa una instancia del modelo o lanza una excepcion.
-        category = Category.objects.get(name = category_name)
+        category = Category.objects.get(name__iexact = category_name)
 
         #Obtener todas las paginas asociadas
         #Los filtros regresan >= 1 de las instancias del modelo
-        pages = Page.objects.filter(category = category)
+        pages = Page.objects.filter(category = category).order_by('-views')
 
         #Agregan la lista de resultados al template
         context_dict['pages'] = pages
 
         #Agregamos el objeto categoria de la DB al diccionario
         context_dict['category'] = category
+
     except Category.DoesNotExist:
         pass
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+            context_dict['result_list'] = result_list
 
     return render_to_response('rango/category.html', context_dict, context)
 
@@ -244,6 +323,10 @@ def index(request):
     #Se guarda en el diccionario
     context_dict = {'categories': category_list, 'pages': page_list}
 
+    #Pasando cat_list a renderizar
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
+    
     #Ciclamos por cada categoria y creamos un atributo URL
     #Este atributo guarda la URL codificada
     for category in category_list:
@@ -275,6 +358,10 @@ def decodeUrl(str):
 def about(request):
     context = RequestContext(request)
     context_dict = {'mensaje':'ola ke ase!!!'}
+
+    #Pasando cat_list a renderizar
+    cat_list = get_category_list()
+    context_dict['cat_list'] = cat_list
 
     #Agregamos un contador de visitas utilizando cookies.
     if request.session.get('visits'):

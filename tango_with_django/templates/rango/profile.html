@@ -1,0 +1,23 @@
+{% extends "rango/base.html" %}
+
+{% block title %}
+    Perfil
+{% endblock title %}
+
+{% block body_block %}
+    <div class="jumbotron">
+        <h1>Perfil</h1><br>
+
+        <h2>{{ user.username }}</h2>
+
+        <p>Email: {{ user.email }}</p>
+        
+        {% if userprofile %}
+            <p>Sitio Web: <a href="{{ userprofile.website }}"> {{ userprofile.website }}</a></p>
+            <br>
+            {% if userprofile.picture %}
+                <img src="{{ userprofile.picture.url }}" alt="">
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock body_block %}

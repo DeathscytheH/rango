@@ -29,9 +29,9 @@
             {% if user.is_authenticated %}
               <li><a href="/rango/restricted/">Area Restringida</a></li>
               <li><a href="/rango/add_category/">Agrega una Categoria</a></li>
+              <li><a href="/rango/profile/">Perfil</a></li>
             {% endif %}
             <li><a href="/rango/about/">Acerca de</a></li>
-            <li><a href="/rango/search/">Busqueda</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
@@ -53,9 +53,14 @@
       <div class="row-fluid">
         <div class="col-md-3 column">
           <div class="well sidebar-nav">
-      {% comment %}
-        Vacia por el momento
-      {% endcomment %}
+            {% block sidebar %}
+              
+            {% endblock sidebar %}
+            {% if cat_list %}
+              <div id="cats">
+                {% include 'rango/category_list.html' with cat_list=cat_list %}
+              </div>
+            {% endif %}
           </div>
         </div>
         <div class="col-md-9 column">

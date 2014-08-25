@@ -28,7 +28,14 @@
         {% if pages %}
         <ul>
             {% for page in pages %}
-            <li><a href="{{ page.url}}">{{ page.title }}</a> - {{ page.category }} ({{ page.views }} vista(s))</li>
+            <li><a href="/rango/goto/?page_id={{page.id}}"> {{ page.title }} </a>
+                - {{ page.category }}
+                {% if page.views > 1 %}
+                    - ({{ page.views }} vistas)
+                {% elif page.views == 1 %}
+                    - ({{ page.views }} vista)
+                {% endif %}
+            </li>
             {% endfor %}
         </ul>
         {% else %}

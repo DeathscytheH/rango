@@ -93,3 +93,10 @@
 
 - Agregar bootstrap, jquery y extras al gusto.
 
+##### Chapter 12
+
+- Agregar Bing Search para echar crema.
+
+##### Chapter 13 y 14
+
+- El diablo esta en los detalles.
