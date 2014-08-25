@@ -100,3 +100,7 @@
 ##### Chapter 13 y 14
 
 - El diablo esta en los detalles.
+
+##### Chapter 15
+
+- Jquery para facilitar las cargas de pagina.
