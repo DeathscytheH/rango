@@ -23,6 +23,43 @@ from rango.bing_search import run_query
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
+@login_required
+def auto_add_page(request):
+    context=RequestContext(request)
+    cat_id = None
+    url = None
+    title = None
+
+    context_dict = {}
+
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+        url = request.GET['url']
+        title = request.GET['title']
+        if cat_id:
+            category = Category.objects.get(id=int(cat_id))
+            p = Page.objects.get_or_create(category=category, title=title, url=url)
+            pages = Page.objects.filter(category=category).order_by('-views')
+
+            context_dict['pages']= pages
+    return render_to_response('rango/page_list.html', context_dict, context)
+
+@login_required
+def like_category(request):
+    context = RequestContext(request)
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        category = Category.objects.get(id=int(cat_id))
+        if category:
+            likes = category.likes + 1
+            category.likes = likes
+            category.save()
+    return HttpResponse(likes)
+
 def track_url(request):
     context = RequestContext(request)
     page_id = None
@@ -263,14 +300,33 @@ def add_category(request):
     return render_to_response('rango/add_category.html', context_dict, context)
 
 #Funcion auxiliar
+#Se modifico para parametrisar las listas y ayudar al codigo ajax.
+def get_category_list(max_results=0, starts_with=''):
+    cat_list = []
+    if starts_with:
+        cat_list = Category.objects.filter(name__istartswith=starts_with)
+    else:
+        cat_list = Category.objects.all()
 
-def get_category_list():
-    cat_list = Category.objects.all()
+    if max_results>0:
+        if len(cat_list)>max_results:
+            cat_list = cat_list[:max_results]
 
     for cat in cat_list:
         cat.url = encodeUrl(cat.name)
     
     return cat_list
+
+def suggest_category(request):
+    context = RequestContext(request)
+    cat_list=[]
+    starts_with=''
+    if request.method == 'GET':
+        starts_with = request.GET['suggestion']
+    else:
+        starts_with = request.POST['suggestion']
+    cat_list = get_category_list(8, starts_with)
+    return render_to_response('rango/category_list.html', {'cat_list': cat_list }, context)
 
 def category(request, category_name_url):
     context = RequestContext(request)
@@ -289,16 +345,16 @@ def category(request, category_name_url):
         #Si no, el metodo .get() lanza una excepcion DoesNotExist
         #El metodo .get() o regresa una instancia del modelo o lanza una excepcion.
         category = Category.objects.get(name__iexact = category_name)
-
+        
+        #Agregamos el objeto categoria de la DB al diccionario
+        context_dict['category'] = category
+        
         #Obtener todas las paginas asociadas
         #Los filtros regresan >= 1 de las instancias del modelo
         pages = Page.objects.filter(category = category).order_by('-views')
 
         #Agregan la lista de resultados al template
         context_dict['pages'] = pages
-
-        #Agregamos el objeto categoria de la DB al diccionario
-        context_dict['category'] = category
 
     except Category.DoesNotExist:
         pass

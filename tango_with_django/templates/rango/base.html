@@ -53,9 +53,19 @@
       <div class="row-fluid">
         <div class="col-md-3 column">
           <div class="well sidebar-nav">
-            {% block sidebar %}
-              
-            {% endblock sidebar %}
+            <ul class="nav">
+              <li></li>
+              <li></li>
+              {% block sidebar %} 
+              {% endblock sidebar %}
+            </ul>
+            <ul class="nav">
+              <li class="nav-header">Encuentra una categoria</li>
+              <form>
+                <label></label>
+                <li><input class="search-query col-md-10" type="text" name="suggestion" value="" id="suggestion"></li>
+              </form>
+            </ul>
             {% if cat_list %}
               <div id="cats">
                 {% include 'rango/category_list.html' with cat_list=cat_list %}
@@ -82,6 +92,6 @@
 
     <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static '/js/rango-ajax.js' %}"></script>
+    <script src="{% static 'js/rango-ajax.js' %}"></script>
 </body>
 </html>

@@ -1,57 +1,60 @@
-{% extends "rango/base.html" %}
+{% extends "rango/base.html" %} 
 
 {% block title %}
     {{ category_name }}
-{% endblock title %}
+{%endblock %} 
 
-{% block body_block %}    
+{% block body_block %}
 
+<div class="jumbotron">
     <h1>{{ category_name }}</h1>
+    {% if category %}
 
-    {% if pages %}
-        <ul>
-            {% for page in pages %}
-            <li><a href="/rango/goto/?page_id={{page.id}}"> {{ page.title }} </a>
-                {% if page.views > 1 %}
-                    - ({{ page.views }} vistas)
-                {% elif page.views == 1 %}
-                    - ({{ page.views }} vista)
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>No hay paginas en esta categoria</strong><br>
+    <p>
+        <b id="like_count">{{ category.likes }}</b> personas les gusta esta categoria.
+        {%if user.is_authenticated %}
+        <button id="likes" data-catid="{{category.id}}" class="btn btn-xs btn-primary" type="button">Like</button>
+        {% endif %}
+    </p>
+    <br/>
+    <div id="pages">
+        {% include "rango/page_list.html" %}
+    </div>
+    {% if user.is_authenticated %} 
+        <a href="/rango/category/{{ category_name_url }}/add_page/">Agrega una pagina</a>
     {% endif %}
-
-    {% if user.is_authenticated %}
-        <a href="/rango/category/{{ category_name_url }}/add_page/">Agrega más paginas</a>
-    {% endif %}
-    <br>
-    <br>
+</div>
+<div class="jumbotron">
     <div class="container">
         <p>Busca una pagina.</p>
         <form class="col-md-8 form-search" id="search_form" method="post" action="/rango/category/{{ category_name_url }}/">
             {% csrf_token %}
             <input type="text" class="input-long search-query" name="query" value="{{ category_name }}" id="query" />
-            <button type="submit" class="btn btn-success" name="submit" value="Search">Buscar</button>
+            <button type="submit" class="btn btn-success" name="submit" value="Search">Busqueda</button>
         </form>
     </div>
     <div class="container">
         {% if result_list %}
         <!-- Display search results in an ordered list -->
-        <ol>
-            {% for result in result_list %}
-                <li>
-                    <strong><a href="{{ result.link }}">{{ result.title }}</a></strong>
-                    <br/>
-                    <p>{{ result.summary }}</p>
-                </li>
-            {% endfor %}
-        </ol>
+            <ol>
+                {% for result in result_list %}
+                    <li>
+                        {% if user.is_authenticated %}
+                            <button data-catid="{{ category.id }}" data-title="{{ result.title }}" data-url="{{ result.link }}" class="rango-add btn-xs btn-info" type="button">Agrega</button>
+                        {% endif %}    
+                        <strong><a href="{{ result.link }}">{{ result.title }}</a></strong>
+                        <br/>
+                        <p>{{ result.summary }}</p>
+                    </li>
+                {% endfor %}
+            </ol>
         {% else %}
-        <br/>
-        <p>Para mostrar resultados. Haz una busqueda.</p>
+            <br />
+            <p>No se encontraron resultados</p>
         {% endif %}
     </div>
-{% endblock body_block %}
+    {% else %} 
+        La categoria: {{ category_name }}, no existe.
+    </div>
+    {% endif %} 
+{% endblock %}
