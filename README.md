@@ -1,8 +1,22 @@
 # Rango
 
+First web app using Django framework. Has polls to rate web sites added to the
+page and stored in a database using bing.
+
+Technology used:
+
+- python
+- Django framework
+- HTML/CSS
+- bootstrap
+- Bing Api
+- sqlite
+
+
+
 #### Mi app resultado del tutorial Tango with Django
 
-### Basic Workflow 
+### Basic Workflow
 
 #####Chapter 3
 
@@ -34,7 +48,7 @@
 - Establecer la DB
     + Escoger cual DB se va a utilizar (configurar ```DATABASES``` en ```setings.py```). Sin esto, Django no sabra donde guardar los datos. Tambien, puedes habilitar la interfaz de admin. Recuerda deshabilitarla cuanto tu app este en producción.
 - Agregando un modelo
-    + Crea un modelo(s) en ```models.py``` en tu app. 
+    + Crea un modelo(s) en ```models.py``` en tu app.
     + Con el modelo creado, reconfigura la interfaz de admin para incluir tu(s) nuevo(s) modelo(s). Si es que los utilizas.
     + Sincroniza o resincroniza la DB con el comando ```python manage.py syncdb```. Esto creara la infraestructura necesaria dentro de la DB para tu nuevo modelo.
     + Crea/edita y ejecuta un scrip de populado para tu(s) nuevo(s) modelo(s).
@@ -80,7 +94,7 @@
     + Identificar las partes recuerrentes de las paginas de tu app
     + En un template base, estara el esqueleto de la estructura y definiremos un numero de bloques que estan sujetos a cambios dependiendo de cual pagina este viendo el usuario.
     + Crear templates especificos.
-- Recuerda cargar ```{% load static %}``` en cada template hijo que lo vayas a utilizar, no solo el base. No se hereda. 
+- Recuerda cargar ```{% load static %}``` en cada template hijo que lo vayas a utilizar, no solo el base. No se hereda.
 
 ##### Chapter 10
 
@@ -96,6 +110,8 @@
 ##### Chapter 12
 
 - Agregar Bing Search para echar crema.
+
+#####Update: Api de bing ya no funciona
 
 ##### Chapter 13 y 14
 
